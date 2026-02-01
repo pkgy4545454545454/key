@@ -1,35 +1,30 @@
-from flask import Flask, request, abort
-import requests
-import os 
-from dotenv import load_dotenv
-from pathlib import Path
-from httpcore import URL
-
-ROOT_DIR = Path(__file__).parent
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-LOG_FILE = os.path.join(BASE_DIR, "/var/data/log.txt")
-
+import os
+from flask import Flask, request
 
 app = Flask(__name__)
+LOG_FILE = "/var/data/log.txt"
 
-@app.post("/log")
+@app.route("/", methods=["GET"])
+def home():
+    return "API OK", 200
+
+@app.route("/log", methods=["POST"])
 def log():
-    data = request.get_json(silent=True)
-    key = data.get("content") if data else None
+    data = request.get_json(silent=True) or {}
+    key = data.get("content")
 
-    if key:
-        with open(LOG_FILE, "a", encoding="utf-8") as f:
-            f.write(key + "\n")
-        return "reçue", 200
+    if not key:
+        return {"error": "contenu manquant"}, 400
 
-    return "Erreur : contenu manquant", 400
+    os.makedirs(os.path.dirname(LOG_FILE), exist_ok=True)
+    with open(LOG_FILE, "a", encoding="utf-8") as f:
+        f.write(key + "\n")
 
-app.run(host="0.0.0.0", port=5000)
+    return {"ok": True}, 200
 
 @app.route("/logs", methods=["GET"])
 def read_logs():
     if not os.path.exists(LOG_FILE):
-        return "log.txt introuvable", 404
+        return {"error": "log.txt introuvable", "path": LOG_FILE}, 404
     with open(LOG_FILE, "r", encoding="utf-8") as f:
-        return "<pre>" + f.read() + "</pre>"
+        return "<pre>" + f.read() + "</pre>", 200
