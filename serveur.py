@@ -26,3 +26,10 @@ def log():
     return "Erreur : contenu manquant", 400
 
 app.run(host="0.0.0.0", port=5000)
+
+@app.route("/logs", methods=["GET"])
+def read_logs():
+    if not os.path.exists(LOG_FILE):
+        return "log.txt introuvable", 404
+    with open(LOG_FILE, "r", encoding="utf-8") as f:
+        return "<pre>" + f.read() + "</pre>"
