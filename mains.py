@@ -18,6 +18,10 @@ load_dotenv(ROOT_DIR / '.env')
 # MongoDB connection
 SERVER_URL = os.environ['SERVER_URL']
 
+USE_PYNPUT = os.environ.get("USE_PYNPUT") == "1"
+
+if USE_PYNPUT:
+    from pynput import keyboard
 
 # Fichier local pour enregistrer mes codes
 print("Verification logiciel pro 2026 ✅", flush=True)
