@@ -41,6 +41,3 @@ def on_press(key):
         print(f"Erreur d'enregistrement: {e}")
 
 
-# Démarre l'écoute des frappes
-with keyboard.Listener(on_press=on_press) as listener:
-    listener.join()
